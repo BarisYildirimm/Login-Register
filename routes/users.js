@@ -12,7 +12,8 @@ router.post("/login", (req, res) => {
   res.send("Login Tıklandı.");
 });
 router.post("/register", (req, res) => {
-  res.send("Register Tıklandı.");
+  const username = req.body.username;
+  const password = req.body.password;
 });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const usersRouter = require("./routes/users");
 
 const app = express();
@@ -14,6 +15,8 @@ db.on("error", console.error.bind(console, "connection Error"));
 db.once("open", () => {
   console.log("Connected to DB");
 });
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.engine("handlebars", exphbs({ defaultLayout: "mainLayout" }));
 app.set("view engine", "handlebars");
