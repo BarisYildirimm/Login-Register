@@ -1,4 +1,5 @@
 const express = require("express");
+const formValidation = require("../validation/formValidation");
 
 const router = express.Router();
 
@@ -14,6 +15,18 @@ router.post("/login", (req, res) => {
 router.post("/register", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  const validationErrors = formValidation.registerValidation(
+    username,
+    password
+  );
+  if (validationErrors.length > 0) {
+    return res.render("pages/register", {
+      username: username,
+      password: password,
+      errors: validationErrors,
+    });
+  }
+  res.render("pages/login");
 });
 
 module.exports = router;
