@@ -3,9 +3,32 @@ const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const usersRouter = require("./routes/users");
+const User = require("./models/Users");
+const flash = require("connect-flash");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = 5000 || process.env.PORT;
+
+//Flash Middleware
+app.use(cookieParser("loginregister"));
+app.use(
+  session({
+    cookie: { maxAge: 60000 },
+    resave: true,
+    secret: "loginregister",
+    saveUninitialized: true,
+  })
+);
+app.use(flash());
+
+//Global Res.Locals
+app.use((req, res, next) => {
+  res.locals.flashSuccess = req.flash("flashSuccess");
+  res.locals.flashError = req.flash("flashError");
+  next();
+});
 
 mongoose.connect("mongodb://localhost/loginregister", {
   useNewUrlParser: true,
@@ -18,14 +41,31 @@ db.once("open", () => {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.engine("handlebars", exphbs({ defaultLayout: "mainLayout" }));
+app.engine(
+  "handlebars",
+  exphbs({
+    defaultLayout: "mainLayout",
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+  })
+);
 app.set("view engine", "handlebars");
 
 //Router Middleware
 app.use(usersRouter);
 
 app.get("/", (req, res) => {
-  res.render("pages/index");
+  User.find({})
+    .then((users) => {
+      res.render("pages/index", {
+        users: users,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use((req, res) => {

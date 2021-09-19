@@ -13,7 +13,10 @@
 <body>
 
     {{>_navbar}}
-    <div class="container"> {{{body}}}</div>
+    <div class="container">
+        {{> _flash}}
+        {{{body}}}
+    </div>
 
 
 
