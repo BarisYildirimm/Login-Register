@@ -7,6 +7,7 @@ const User = require("./models/Users");
 const flash = require("connect-flash");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const passport = require("passport");
 
 const app = express();
 const PORT = 5000 || process.env.PORT;
@@ -22,11 +23,21 @@ app.use(
   })
 );
 app.use(flash());
+//passport initialize
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Global Res.Locals
 app.use((req, res, next) => {
   res.locals.flashSuccess = req.flash("flashSuccess");
   res.locals.flashError = req.flash("flashError");
+
+  //passport flash
+  res.locals.passportFailure = req.flash("error");
+  res.locals.passportSuccess = req.flash("success");
+
+  res.locals.user = req.user;
+
   next();
 });
 
