@@ -26,7 +26,7 @@ router.post("/register", (req, res) => {
       errors: validationErrors,
     });
   }
-  res.render("pages/login");
+  res.send("register Tıklandı...");
 });
 
 module.exports = router;

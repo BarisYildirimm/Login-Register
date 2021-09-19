@@ -1,5 +1,5 @@
 module.exports.registerValidation = (username, password) => {
-  const errors = [3];
+  const errors = [];
 
   if (username === "") {
     errors.push({ message: "please fill the username area" });
